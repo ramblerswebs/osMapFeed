@@ -16,10 +16,10 @@ class bounds {
     public $eastingmin, $northingmin, $eastingmax, $northingmax;
 
     public function __construct($eastingmin, $northingmin, $eastingmax, $northingmax) {
-        $this->eastingmin = $eastingmin;
-        $this->northingmin = $northingmin;
-        $this->eastingmax = $eastingmax;
-        $this->northingmax = $northingmax;
+        $this->eastingmin = $eastingmin."00";
+        $this->northingmin = $northingmin."00";
+        $this->eastingmax = $eastingmax."00";
+        $this->northingmax = $northingmax."00";
     }
 
 }

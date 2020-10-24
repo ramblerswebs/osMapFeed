@@ -8,24 +8,16 @@
  */
 class OsmapsDatabase extends Database {
 
-//    private $tables = ["postcodes"];
-//    private $sql = ["CREATE TABLE `postcodes` (
-//  `postcode` varchar(8) NOT NULL,
-//  `quality` tinyint(4) NOT NULL,
-//  `easting` mediumint(9) NOT NULL,
-//  `northing` mediumint(9) NOT NULL,
-//  `updated` date DEFAULT NULL
-//) ENGINE=InnoDB DEFAULT CHARSET=utf8; ",
-//        "ALTER TABLE `postcodes`
-//  ADD UNIQUE KEY `postcode` (`postcode`);"];
+    // bounds are stored in units of 100m
 
     public function __construct($dbconfig) {
         parent::__construct($dbconfig);
     }
 
     public function getMapIds($east, $north) {
+        // bounds are stored in units of 100m
         $allMaps = $this->getAllMaps();
-        $where = " WHERE eastingmin<=" . $east . " AND eastingmax>=" . $east . " AND northingmin<=" . $north . " AND northingmax>=" . $north;
+        $where = " WHERE eastingmin<=" . $this->changeTo100m($east) . " AND eastingmax>=" . $this->changeTo100m($east) . " AND northingmin<=" . $this->changeTo100m($north) . " AND northingmax>=" . $this->changeTo100m($north) . "";
         $ok = parent::runQuery("SELECT * FROM mapbounds " . $where);
         if ($ok === false) {
             Logfile::writeError($this->db->ErrorMsg());
@@ -38,6 +30,25 @@ class OsmapsDatabase extends Database {
             $mapid = $value['mapid'];
             if (array_key_exists($mapid, $allMaps)) {
                 $maps[] = $allMaps[$mapid];
+            }
+        }
+
+        return $maps;
+    }
+    private function changeTo100m($value){
+        return substr($value, 0, strlen($value)-2);
+    }
+
+    public function getMapsScale($scale) {
+        $allMaps = $this->getAllMaps();
+        $maps = [];
+        foreach ($allMaps as $key => $value) {
+            $mapscale = $value->scale;
+            if ($mapscale === '25000' AND $scale === '25K') {
+                $maps[] = $allMaps[$key];
+            }
+            if ($mapscale === '50000' AND $scale === '50K') {
+                $maps[] = $allMaps[$key];
             }
         }
 

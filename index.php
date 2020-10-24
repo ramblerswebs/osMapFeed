@@ -32,27 +32,39 @@ $opts = new Options();
 
 $easting = $opts->gets("easting");
 $northing = $opts->gets("northing");
+$mapscale = $opts->gets("mapscale");
 
 
-    $exit = false;
-    if ($easting === null) {
-        $exit = true;
+
+$exit = false;
+if ($easting === null) {
+    $exit = true;
+}
+if ($northing === null) {
+    $exit = true;
+}
+
+
+if ($exit) {
+    $maps = [];
+    if ($mapscale !== null) {
+        $maps = $db->getMapsScale($mapscale);
     }
-    if ($northing === null) {
-        $exit = true;
-    }
-   
-    if ($exit) {
-        $osmaps = [];
-        echo json_encode($osmaps);
-        exit;
-    }
-    $east=intval($easting);
-    $north=intval($northing);
-    $maps = $db->getMapIds($east,$north);
- //   $postcodes = $pcs->getCodes($easting, $northing, $distance * 1000, $maxpoints);
+
     header("Access-Control-Allow-Origin: *");
     header("Content-type: application/json");
     echo json_encode($maps);
+
+    $db->closeConnection();
+
+    exit;
+}
+$east = intval($easting);
+$north = intval($northing);
+$maps = $db->getMapIds($east, $north);
+//   $postcodes = $pcs->getCodes($easting, $northing, $distance * 1000, $maxpoints);
+header("Access-Control-Allow-Origin: *");
+header("Content-type: application/json");
+echo json_encode($maps);
 
 $db->closeConnection();
