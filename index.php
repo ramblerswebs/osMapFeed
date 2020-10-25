@@ -1,15 +1,11 @@
 <?php
 
 // options
-// index.php?easting=394120&northing=806540&dist=1&maxpoints=1000
+// index.php?mapscale=50K
+// index.php?mapscale=25K
+// index.php?easting=9000&northing=5000
 //  where 
-//      easting and northing is the location
-//      dist is distance from location in Km
-//      maxpoints is the maximum number for points to return
-// index.php?postcode=de221jt
-//  where 
-//      postcode is the postcode!
-// task.php scheduled task to update postcodes from OS datasets
+//      easting and northing is the location in metres
 
 
 error_reporting(-1);
@@ -34,8 +30,6 @@ $easting = $opts->gets("easting");
 $northing = $opts->gets("northing");
 $mapscale = $opts->gets("mapscale");
 
-
-
 $exit = false;
 if ($easting === null) {
     $exit = true;
@@ -43,28 +37,22 @@ if ($easting === null) {
 if ($northing === null) {
     $exit = true;
 }
-
-
+header("Access-Control-Allow-Origin: *");
+header("Content-type: application/json");
 if ($exit) {
     $maps = [];
     if ($mapscale !== null) {
         $maps = $db->getMapsScale($mapscale);
     }
-
-    header("Access-Control-Allow-Origin: *");
-    header("Content-type: application/json");
-    echo json_encode($maps);
-
-    $db->closeConnection();
-
-    exit;
+} else {
+    $east = intval($easting);
+    $north = intval($northing);
+    $maps = $db->getMapIds($east, $north);
 }
-$east = intval($easting);
-$north = intval($northing);
-$maps = $db->getMapIds($east, $north);
-//   $postcodes = $pcs->getCodes($easting, $northing, $distance * 1000, $maxpoints);
-header("Access-Control-Allow-Origin: *");
-header("Content-type: application/json");
-echo json_encode($maps);
-
+//var_dump($maps);
+echo json_encode($maps,JSON_PRETTY_PRINT|JSON_INVALID_UTF8_IGNORE);
+$okay=json_last_error();
+if ($okay!==JSON_ERROR_NONE){
+   // var_dump($okay);
+}
 $db->closeConnection();

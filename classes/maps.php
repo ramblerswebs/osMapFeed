@@ -23,10 +23,10 @@ class maps {
         $title = $values['title'];
 
         $map = $this->setMap($no, $type, $scale, $number, $title);
-        $eastingmin = $values['eastingmin'];
-        $northingmin = $values['northingmin'];
-        $eastingmax = $values['eastingmax'];
-        $northingmax = $values['northingmax'];
+        $eastingmin = intval($values['eastingmin']) * 100;
+        $northingmin = intval($values['northingmin']) * 100;
+        $eastingmax = intval($values['eastingmax']) * 100;
+        $northingmax = intval($values['northingmax']) * 100;
         $bounds = new bounds($eastingmin, $northingmin, $eastingmax, $northingmax);
         $map->addBounds($bounds);
     }

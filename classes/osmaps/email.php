@@ -14,8 +14,8 @@
 class OsmapEmail {
 
     public static function send($subtitle, $text) {
-        $email = "admin@walkinginfo.co.uk";
-        $headers = "From: admin@walkinginfo.co.uk\r\n";
+        $email = "admin@ramblers-webs.org.uk";
+        $headers = "From: admin@ramblers-webs.org.uk\r\n";
         $headers .= "Content-type: text/html\r\n";
         $title = "[OS Map] " . $subtitle;
         $mailed = mail($email, $title, $text, $headers);
