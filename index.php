@@ -8,8 +8,8 @@
 //      easting and northing is the location in metres
 
 
-error_reporting(-1);
-ini_set('display_errors', 'On');
+//error_reporting(-1);
+//ini_set('display_errors', 'On');
 if (file_exists("config.php")) {
     require_once 'config.php';
 } else {
@@ -22,7 +22,10 @@ $config = new Config();
 $db = new OsmapsDatabase($config->database);
 $db->connect();
 if (!$db->connected()) {
-    OsmapEmail::send("OS Map: Unable to connect to database", $db->error());
+    header("Access-Control-Allow-Origin: *");
+    header("Content-type: application/json");
+    echo "[]";
+    exit;
 }
 $opts = new Options();
 
@@ -50,9 +53,9 @@ if ($exit) {
     $maps = $db->getMapIds($east, $north);
 }
 //var_dump($maps);
-echo json_encode($maps,JSON_PRETTY_PRINT|JSON_INVALID_UTF8_IGNORE);
-$okay=json_last_error();
-if ($okay!==JSON_ERROR_NONE){
-   // var_dump($okay);
+echo json_encode($maps, JSON_PRETTY_PRINT | JSON_INVALID_UTF8_IGNORE);
+$okay = json_last_error();
+if ($okay !== JSON_ERROR_NONE) {
+    // var_dump($okay);
 }
 $db->closeConnection();

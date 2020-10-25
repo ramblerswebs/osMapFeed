@@ -20,7 +20,7 @@ class OsmapsDatabase extends Database {
         $where = " WHERE eastingmin<=" . $this->changeTo100m($east) . " AND eastingmax>=" . $this->changeTo100m($east) . " AND northingmin<=" . $this->changeTo100m($north) . " AND northingmax>=" . $this->changeTo100m($north) . "";
         $ok = parent::runQuery("SELECT * FROM mapbounds " . $where);
         if ($ok === false) {
-            Logfile::writeError($this->db->ErrorMsg());
+            //Logfile::writeError($this->db->ErrorMsg());
             return false;
         }
         $ids = parent::getResult();
@@ -58,7 +58,7 @@ class OsmapsDatabase extends Database {
     public function getAllMaps() {
         $ok = parent::runQuery("SELECT * FROM maps INNER JOIN mapbounds ON maps.id=mapbounds.mapid");
         if ($ok === false) {
-            Logfile::writeError($this->db->ErrorMsg());
+            //Logfile::writeError($this->db->ErrorMsg());
             return false;
         }
         $ids = parent::getResult();
