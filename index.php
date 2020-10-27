@@ -53,9 +53,19 @@ if ($exit) {
     $maps = $db->getMapIds($east, $north);
 }
 //var_dump($maps);
-echo json_encode($maps, JSON_PRETTY_PRINT | JSON_INVALID_UTF8_IGNORE);
+echo json_encode($maps);
+//echo json_encode($maps, JSON_PRETTY_PRINT | JSON_INVALID_UTF8_IGNORE);
 $okay = json_last_error();
 if ($okay !== JSON_ERROR_NONE) {
     // var_dump($okay);
+       foreach ($maps as $key => $map) {
+            $json= json_encode($map);
+            $okay = json_last_error();
+            if ($okay !== JSON_ERROR_NONE) {
+                var_dump($okay);
+                var_dump($map);
+        }
+    }
+        
 }
 $db->closeConnection();
