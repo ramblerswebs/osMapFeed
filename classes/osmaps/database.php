@@ -32,8 +32,10 @@ class OsmapsDatabase extends Database {
                 $maps[] = $allMaps[$mapid];
             }
         }
+        // remove duplicate values
+       return array_unique($maps,SORT_REGULAR );
 
-        return $maps;
+        
     }
     private function changeTo100m($value){
         return substr($value, 0, strlen($value)-2);
